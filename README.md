@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# RepoRoverAI
 
-First, run the development server:
+AI-assisted coding mentor with interactive lessons, quizzes, achievements, and GitHub repository analysis.
+
+**Live:** https://reporoverai-chi.vercel.app/
+
+</div>
+
+## Overview
+
+RepoRoverAI blends structured learning paths with AI explanations and hands-on practice. Learners progress through lessons, quizzes, and achievements while analyzing real GitHub repositories to see concepts applied in the wild.
+
+## Core Features
+
+- **AI tutor:** Gemini-powered explanations for code snippets and lessons.
+- **Learning paths:** Guided tracks (JavaScript, Python, React) with lessons and quizzes.
+- **Gamification:** XP, streaks, and achievements to keep momentum.
+- **Progress insights:** Dashboard with progress charts and history.
+- **GitHub analyzer:** Analyze public repos for language stats, stars, and activity; save findings to your profile.
+- **Authentication:** Email/password auth with secure session handling.
+
+## Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS 4, Radix UI + custom UI kit.
+- **Data:** Drizzle ORM with Turso (libSQL); migrations live in `drizzle/`.
+- **Auth:** better-auth with bcrypt hashing.
+- **AI:** Google Gemini (`@google/generative-ai`).
+- **Integrations:** GitHub API for repo analysis; charts via Recharts; forms via React Hook Form + Zod.
+
+## Project Structure
+
+- `src/app/` — App Router pages, API routes under `app/api/*` (auth, GitHub, lessons, quizzes, progress, repositories).
+- `src/components/` — Shared UI (buttons, cards, navigation) built on Radix primitives.
+- `src/db/` — Drizzle schema, seeds, and DB client.
+- `drizzle/` — Generated SQL migrations and snapshots.
+- `src/lib/` — Auth client and utilities.
+
+## Prerequisites
+
+- Node.js 18.18+ (Next.js 15 requirement)
+- npm, pnpm, or yarn (examples use `npm`)
+
+## Environment Variables
+
+Create a `.env` file in the project root (never commit real secrets). Required keys:
+
+| Key | Description |
+| --- | --- |
+| `TURSO_CONNECTION_URL` | Turso/libSQL connection string |
+| `TURSO_AUTH_TOKEN` | Turso auth token |
+| `BETTER_AUTH_SECRET` | Secret for better-auth sessions |
+| `GEMINI_API_KEY` | Google Gemini API key |
+| `GITHUB_TOKEN` | Token for GitHub API access (repo analysis) |
+| `GITHUB_CLIENT_ID` | GitHub OAuth client ID |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret |
+| `CHUNK_SIZE` | Text chunk size for content processing |
+| `CHUNK_OVERLAP` | Overlap for text chunking |
+| `CODE_CHUNK_SIZE` | Code chunk size for analysis |
+| `CODE_CHUNK_OVERLAP` | Overlap for code chunking |
+
+## Setup & Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the dev server (Turbopack enabled by default):
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Lint the codebase:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+```
 
-## Learn More
+## Database & Migrations (Turso)
 
-To learn more about Next.js, take a look at the following resources:
+- Ensure `TURSO_CONNECTION_URL` and `TURSO_AUTH_TOKEN` are set.
+- Apply migrations to your Turso database:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx drizzle-kit push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Migration files live in `drizzle/`; schema definitions live in `src/db/schema.ts`.
 
-## Deploy on Vercel
+## Production Build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+npm run start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The project is deployed on Vercel at https://reporoverai-chi.vercel.app/. For self-hosting, provide the same environment variables in your hosting platform and run the production commands above.
+
+## Notes for Contributors
+
+- Keep secrets out of version control; use `.env` locally and platform-specific secret managers in production.
+- Favor type-safe utilities (Zod + TypeScript) for API contracts.
+- UI components are shared; prefer composition over duplication when adding new screens.
