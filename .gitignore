@@ -148,3 +148,4 @@ temp/
 # API keys and secrets
 .env
 env
+.env*.local
